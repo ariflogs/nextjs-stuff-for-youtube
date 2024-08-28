@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import { getFileRoutes } from "@/lib/files";
+import Link from "next/link";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,11 +17,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const route = getFileRoutes("./src/app");
+
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>{children}</body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <div className="flex space-x-6">
+          <div className="border flex flex-col space-y-4 w-40 h-[100vh]">
+            <Image src="/warp.png" alt="logo" height={60} width={180} />
+            {route.map((r) => (
+              <Link href={r.route}>{r.title}</Link>
+            ))}
+          </div>
+
+          <div className="m-4">{children}</div>
+        </div>
+      </body>
+    </html>
   );
 }
